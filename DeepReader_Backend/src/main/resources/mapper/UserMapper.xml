@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.UserMapper">
+    <select id="findAll" resultType="User">
+        select * from user_info
+    </select>
+
+    <select id="findUserByUserAndPwd" resultType="User">
+        select * from user_info where username= #{username} and pwd = #{pwd} limit 1
+    </select>
+
+    <select id="findUserByUsername" resultType="User">
+        select * from user_info where username= #{username}
+    </select>
+
+    <select id="findUserById" resultType="User">
+        select * from user_info where id= #{id} limit 1
+    </select>
+
+    <select id="getUserPermission" resultType="java.lang.Integer">
+        SELECT p.permissionId FROM permission_info p WHERE p.userId=#{userId}
+    </select>
+
+    <select id="findClassByUsername" resultType="UserClass">
+        SELECT m.major,c.college,uc.clsNo
+        from major_info m,college_info c,user_cls uc,user_info u
+        WHERE uc.userId=u.id
+          and m.collegeId=c.id
+          and uc.majorId=m.id
+          and u.username= #{username}
+    </select>
+
+    <update id="updateUserInfo">
+        update user_info set name=#{name},pwd=#{password} where username=#{username}
+    </update>
+
+    <update id="updateUserHypothesis">
+        update user_info u set hypothesisname=#{hypothesisName} where u.id=#{userid}
+    </update>
+
+    <insert id="insertKWLForm"  keyProperty="id" useGeneratedKeys="true" parameterType="KWL">
+        INSERT INTO kwl_info (userId,bookId,preKnown,QA,rate,summary,read_time,finish_time)  VALUES (#{userId},#{bookId},#{preKnown},#{QA},#{rate},#{summary},#{read_time},#{finish_time})
+    </insert>
+
+    <select id="getKWLsByUserid" resultType="KWL">
+        SELECT * from kwl_info where userId=#{userid}
+    </select>
+
+    <insert id="insertUserRead">
+        insert into user_read (userid,bookid) values (#{userid},#{bookid})
+    </insert>
+
+    <insert id="insertUserAnswer">
+        insert into user_answer values (#{userId},#{bookId})
+    </insert>
+
+    <insert id="insertQuestionForm"  keyProperty="id" useGeneratedKeys="true" parameterType="QuestionForm">
+        insert into question_info (question,type,answer,clues,summary,robotQuestion,rate,modifyQuestion,suggestionhelp,userId,bookId,finish_time,supplementClues) values
+        (#{question},#{type},#{answer},#{clues},#{summary},#{robotQuestion},#{rate},#{modifyQuestion},#{suggestionhelp},#{userId},#{bookId},#{finish_time},#{supplementClues})
+    </insert>
+
+    <select id="getUserHeat" resultType="Heat">
+        SELECT date,SUM(1) heat FROM (SELECT DATE_FORMAT(finish_time,'%Y-%m-%d') date  FROM question_info qi WHERE userId=#{userId}  union all
+            SELECT DATE_FORMAT(finish_time,'%Y-%m-%d') date  FROM kwl_info ki WHERE userId=#{userId}  union all
+            SELECT DATE_FORMAT(finish_time,'%Y-%m-%d') date  FROM answer_info ai WHERE userId=#{userId} ) temp GROUP BY date
+    </select>
+
+    <insert id="insertUser"  keyProperty="id" useGeneratedKeys="true" parameterType="User">
+        insert into user_info (username,yourname,sex,pwd) values
+            (#{username},#{yourname},#{sex},#{password})
+    </insert>
+
+    <insert id="insertUserPermission" >
+        insert into permission_info (userId,permissionId) values (#{userId},#{permissionId})
+    </insert>
+
+    <insert id="insertReadLog" >
+        insert into read_log (userid,behavior,bookid,stamptime) values (#{userid},#{behavior},#{bookid},#{stamptime})
+    </insert>
+
+    <select id="getCourseId" resultType="java.lang.Integer">
+        SELECT ci.id FROM course_info ci WHERE ci.courseNum=#{courseNum}
+    </select>
+
+    <insert id="insertUserCourse" >
+        insert into user_course (userId,courseId) values (#{userId},#{courseId})
+    </insert>
+
+    <select id="getUserQuestions" resultType="cn.ywrby.domain.QuestionForm">
+        select * from question_info where userId=#{userid} and bookId=#{bookId}
+    </select>
+
+    <select id="getAnswerListByQuestionId" resultType="cn.ywrby.domain.AnswerForm">
+        select * from answer_info where questionId=#{questionid}
+    </select>
+
+    <select id="getUserListByCourseid" resultType="cn.ywrby.domain.UserCourse">
+        select * from user_course where courseId=#{courseid}
+    </select>
+
+    <select id="getUserTestScore" resultType="cn.ywrby.domain.TestScore">
+        select * from user_test_score where username=#{username}
+    </select>
+
+</mapper>

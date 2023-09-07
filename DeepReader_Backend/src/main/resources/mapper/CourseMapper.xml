@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.CourseMapper">
+    <select id="getUserCourse" resultType="Course">
+        SELECT c.* from course_info c,user_course uc WHERE c.id=uc.courseId and uc.userId=#{userId}
+    </select>
+
+    <select id="getUserCourseBybookid" resultType="Course">
+        SELECT * from course_info c where c.id in (select cl.courseId from classify_info cl where cl.id in(select b.classifyId from book_info b where b.id=#{bookid}))
+    </select>
+
+    <select id="getCourse" resultType="Course">
+        select * from course_info
+    </select>
+
+    <select id="getCourseList" resultType="Course">
+        select * from course_info
+    </select>
+
+    <insert id="insertClassify"  keyProperty="id" useGeneratedKeys="true" parameterType="Classify">
+        insert into classify_info (work,KWLQ,courseId,start_date,end_date) values
+            (#{name},#{displayMode},#{courseId},#{start_date},#{end_date})
+    </insert>
+
+    <select id="findCourseNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM course_info WHERE courseNum=#{courseNum}
+    </select>
+
+
+    <insert id="insertCourse"  keyProperty="id" useGeneratedKeys="true" parameterType="Course">
+        insert into course_info (courseName,instructorName,courseContent,groupnameHP,courseNum,userId) values
+            (#{courseName},#{instructorName},#{courseContent},#{groupnameHP},#{courseNum},#{userId})
+    </insert>
+
+    <select id="getCourseNum"  resultType="Course">
+        select * from course_info where userId=#{userId}
+    </select>
+
+    <select id="getCourseById"  resultType="Course">
+        select * from course_info where id=#{courseid}
+    </select>
+
+    <update id="setHavegroupById">
+        update course_info set havegroup=1 where id=#{courseid}
+    </update>
+
+    <update id="updateCourseInfo">
+        update course_info set userId=#{userId},courseName=#{courseNum},courseName=#{courseName},instructorName=#{instructorName},courseContent=#{courseContent},groupnameHP=#{groupnameHP} where id=#{id}
+    </update>
+
+    <delete id="deleteCourseInfo">
+        delete from course_info where id = #{id}
+    </delete>
+</mapper>

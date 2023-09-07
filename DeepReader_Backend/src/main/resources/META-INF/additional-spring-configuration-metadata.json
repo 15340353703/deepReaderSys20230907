@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "jdk.tls.disabledAlgorithms",
+      "type": "java.lang.String",
+      "description": "Description for jdk.tls.disabledAlgorithms."
+  }
+] }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.ClassifyMapper">
+    <select id="getClassifyList" resultType="Classify">
+        SELECT cls.id,cse.courseName name,cls.work,cls.KWLQ,cse.courseNum,cls.courseId from classify_info cls,course_info cse WHERE cse.id=cls.courseId
+    </select>
+
+    <select id="findClassifyById" resultType="Classify">
+        select cls.id,cse.courseName name,cls.work,cls.KWLQ,cse.courseNum,cls.courseId from classify_info cls,course_info cse where cls.id= #{classifyId} and cls.courseId=cse.id limit 1
+    </select>
+
+    <select id="getClassifyListByCourseId" resultType="Classify">
+        select cls.id,cse.courseName name,cls.work,cls.KWLQ,cls.courseId,cls.start_date,cls.end_date from classify_info cls,course_info cse where cse.id=#{id} and cse.id=cls.courseId
+    </select>
+
+    <update id="updateClassifyInfo">
+        update classify_info cls set cls.KWLQ=#{displayMode},cls.courseId=#{courseId},cls.work=#{work},cls.start_date=#{start_date},cls.start_date=#{end_date} where id=#{id}
+    </update>
+
+    <delete id="deleteClassifyInfo">
+        delete from classify_info where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.DeepQuestionMapper">
+
+<!--    <select id="getQuestionFormByBookId" resultType="QuestionForm">-->
+<!--        SELECT * from question_info q WHERE q.bookId=#{bookId}-->
+<!--    </select>-->
+
+    <select id="getLoginCount" resultType="int">
+        select count(*) from user_login
+    </select>
+
+    <select id="getLoginCountByUser" resultType="int">
+        select count(*) from user_login where userid=#{userid}
+    </select>
+
+    <select id="getQuestionFormByBookAndUser" resultType="QuestionForm">
+        SELECT * from question_info q WHERE q.userId=#{userId} and q.bookId=#{bookId}
+    </select>
+
+    <select id="getUserhighlight" resultType="UserHighlight">
+        SELECT u.username,u.yourname,b.name,readfeedback from summary_question sq left join question_info q on q.id=sq.questionid left join user_info u on u.id=sq.userid left join book_info b on b.id=q.bookId
+            left join classify_info cl on b.classifyId=cl.id inner join course_info c on cl.courseId=c.id where c.id=#{couseid}
+    </select>
+
+    <select id="getQuestionFormByBookId" resultType="QuestionForm">
+        SELECT * from question_info q WHERE q.userId=#{userId}
+    </select>
+
+    <select id="getQuestionsBybook" resultType="QuestionForm">
+        SELECT * from question_info q WHERE q.bookId=#{bookid}
+    </select>
+
+    <select id="getAllQuestions" resultType="QuestionForm">
+        SELECT * from question_info
+    </select>
+
+    <select id="getAllReadlog" resultType="Readlog">
+        SELECT * from read_log where userid=#{userid} order by stamptime asc
+    </select>
+
+    <select id="getReadlogByBookId" resultType="Readlog">
+        SELECT * from read_log where userid=#{userid} and bookid=#{bookid} order by stamptime asc
+    </select>
+
+    <select id="getKWLList" resultType="KWL">
+        SELECT * from kwl_info
+    </select>
+
+    <select id="getKWLListBybookId" resultType="KWL">
+        SELECT * from kwl_info where bookId=#{bookid}
+    </select>
+
+    <select id="getQuestionFormByUserId" resultType="QuestionForm">
+        SELECT * from question_info q WHERE q.userId=#{userId} order by finish_time asc
+    </select>
+
+    <select id="getAnswerFormByUserId" resultType="AnswerForm">
+        SELECT * from answer_info a WHERE a.userId=#{userId} and a.bookId=#{bookId}
+    </select>
+
+    <select id="getAnswersBybook" resultType="AnswerForm">
+        SELECT * from answer_info a WHERE a.bookId=#{bookid}
+    </select>
+
+    <select id="getHighlightsBybook" resultType="SummaryQuestion">
+        SELECT sq.* from summary_question sq left join question_info q on sq.questionid=q.id WHERE q.bookId=#{bookid}
+    </select>
+
+    <select id="getHighlightsByUser" resultType="SummaryQuestion">
+        SELECT * from summary_question where userid=#{userid}
+    </select>
+
+    <select id="getAnswerFormByUserAndQuestion" resultType="AnswerForm">
+        SELECT * from answer_info a WHERE a.userId=#{userId} and a.questionId=#{questionId}
+    </select>
+
+    <update id="updateQuestionForm">
+        update question_info set fluency=#{fluency},importance=#{importance},complexity=#{complexity} where userId=#{userid} and id=#{questionid}
+    </update>
+
+    <insert id="insertAnswerForm"  keyProperty="id" useGeneratedKeys="true" parameterType="AnswerForm">
+        insert into answer_info (userId,bookId,questionId,answer,fluency,complexity,importance,opinion,finish_time,judge) values
+        (#{userId},#{bookId},#{questionId},#{answer},#{fluency},#{complexity},#{importance},#{opinion},#{finish_time},#{judge})
+    </insert>
+
+    <insert id="insertUserSummary">
+        insert into user_summary (userId,questionid,summary,timestamp ) values(#{userId},#{questionid},#{summary},#{datetime})
+    </insert>
+
+    <insert id="insertQuestionfeedback">
+        insert into user_question_feedback (userid,bookid,questionfeedback,feeling,usefulrate,usefulcause,timestamp) values(#{userid},#{bookid},#{questionfeedback},#{feeling},#{usefulrate},#{usefulcause},#{datetime})
+    </insert>
+
+    <insert id="insertAnnotationfeedback">
+        insert into user_readfeedback (userid,bookid,readfeedback,feeling,usefulrate,usefulcause,timestamp) values(#{userid},#{bookid},#{annotationfeedback},#{feeling},#{usefulrate},#{usefulcause},#{datetime})
+    </insert>
+
+    <insert id="insertSummaryQuestion">
+        insert into summary_question (userid,questionid,questionfeedback,questionfeedbackfeeling,questionfeedbackusefulrate,questionfeedbackusefulcause,
+                                       readfeedback,readfeedbackfeeling,readfeedbackusefulrate,readfeedbackusefulcause,timestamp)
+                                       values(#{userid},#{questionid},#{questionfeedback},#{questionfeedbackfeeling},#{questionfeedbackusefulrate},#{questionfeedbackusefulcause},
+                                              #{annotationfeedback},#{annotationfeedbackfeeling},#{annotationfeedbackusefulrate},#{annotationfeedbackusefulcause},#{timestamp})
+    </insert>
+
+</mapper>

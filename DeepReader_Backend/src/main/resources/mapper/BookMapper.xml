@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.BookMapper">
+
+
+    <select id="getSimplifyBookListByClassifyId" resultType="Book">
+        SELECT b.id,b.name,b.author,b.pages FROM classify_info c,book_info b WHERE c.id=b.classifyId and c.id=#{classifyId}
+    </select>
+
+    <select id="getSimplifyBookListByCourseId" resultType="Book">
+        SELECT b.id,b.name,b.author,b.pages FROM classify_info c,book_info b,course_info ci WHERE c.id=b.classifyId and c.courseId=ci.id and ci.id=#{courseId}
+    </select>
+
+    <select id="getBookList" resultType="Book">
+        select * from book_info
+    </select>
+
+    <select id="getBookContent" resultType="java.lang.String">
+        select content from book_content where bookId=#{bookId}
+    </select>
+
+    <select id="getUserBookList" resultType="Book">
+        select b.*,ci.`courseName` classify_name,c.`work` work,c.`courseId` courseId  from book_info b,classify_info c, user_course uc,course_info ci where  uc.courseId=ci.id and b.classifyId=c.id and ci.id=c.courseId and uc.userId=#{userId}
+    </select>
+
+    <select id="getBookByClassifyId" resultType="Book">
+        SELECT * FROM book_info b WHERE b.classifyId=#{classifyId}
+    </select>
+
+    <select id="getBookInfo" resultType="Book">
+        SELECT * from book_info b WHERE b.id=#{bookId}
+    </select>
+
+    <select id="getUserHaveReadList" resultType="java.lang.Integer">
+        SELECT bookId FROM user_read ur WHERE ur.userId=#{userId}
+    </select>
+
+
+    <select id="getUserHaveAnswerList" resultType="cn.ywrby.domain.AnswerForm">
+        SELECT * FROM answer_info ua WHERE ua.userId=#{userId} and ua.bookId=#{bookId}
+    </select>
+
+    <insert id="uploadBook"   keyProperty="id" useGeneratedKeys="true" parameterType="Book">
+        insert into book_info (name,author,start_date,end_date,brief_introduction,content,reading_stage,classifyId,url,wordcount) values
+            (#{name},#{author},#{start_date},#{end_date},#{brief_introduction},#{content},#{reading_stage},#{classifyId},#{url},#{wordcount})
+    </insert>
+
+    <update id="updateBookInfo">
+        update book_info set name=#{name},author=#{author},start_date=#{start_date},end_date=#{end_date},brief_introduction=#{brief_introduction},reading_stage=#{reading_stage},wordcount=#{wordcount} where id=#{id}
+    </update>
+
+    <delete id="deleteBookInfo">
+        delete from book_info where id=#{id}
+    </delete>
+</mapper>

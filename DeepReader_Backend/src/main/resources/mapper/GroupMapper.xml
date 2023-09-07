@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--映射文件DTD约束头-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--mybatis用户映射文件-->
+<mapper namespace="cn.ywrby.mapper.GroupMapper">
+    <insert id="insertGroup" >
+        insert into dividegroup (groupname) values (#{groupname})
+    </insert>
+
+    <insert id="insertUsergroup" >
+        insert into user_group (groupname,username) values (#{groupname},#{username})
+    </insert>
+
+    <select id="getUserGroupList" resultType="UserGroup">
+        select * from user_group
+    </select>
+</mapper>
